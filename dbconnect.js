@@ -32,7 +32,7 @@ async function connect() {
     console.log("---Connecting to MongoDB---");
 
     try {
-         global.mongoose.promise = mongoose.connect(process.env.MONGO_URI || "", opts).then((mongoose) => {
+         global.mongoose.promise = mongoose.connect(__configurations.MONGO_URI || "", opts).then((mongoose) => {
         console.log("---Connected!---");
         return mongoose;
       });
