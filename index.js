@@ -26,7 +26,16 @@ app.use((req, res, next) => {
     next();
   }
 });
-app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
+/*
+*
+*swagger-ui-express have to be 4.3.0 then only working in vercel
+*https://github.com/swagger-api/swagger-ui/issues/8461 check these out
+*/
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+
+app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument ,{ customCssUrl: CSS_URL }));
 app.get("/health-check", async (req, res) => {
   await dbconnect();
   res.status(200).json({ message: "server is up" });
@@ -42,8 +51,3 @@ if (__configurations.ENVIRONMENT=='local'){
 module.exports= app
 
 
-/*
-*
-*swagger-ui-express have to be 4.3.0 then only working in vercel
-*https://github.com/swagger-api/swagger-ui/issues/8461 check these out
-*/
