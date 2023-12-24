@@ -40,3 +40,10 @@ if (__configurations.ENVIRONMENT=='local'){
 
 
 module.exports= app
+
+
+/*
+*
+*swagger-ui-express have to be 4.3.0 then only working in vercel
+*https://github.com/swagger-api/swagger-ui/issues/8461 check these out
+*/
