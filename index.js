@@ -5,8 +5,8 @@ const dbconnect = require('./dbconnect')
 const express = require('express');
 const app = express()
 
-app.get('/' , (req,res) =>{
-    dbconnect()
+app.get('/' , async (req,res) =>{
+    await dbconnect()
     res.status(200).json({message:"hello"})
 })
 
