@@ -6,9 +6,8 @@ const express = require('express');
 const app = express()
 
 app.get('/' , (req,res) =>{
+    dbconnect()
     res.status(200).json({message:"hello"})
 })
-app.listen(300,() =>{
-    console.log('server started ')
-    dbconnect()
-})
+
+export default app;
