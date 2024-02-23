@@ -11,13 +11,16 @@ const path = require('path');
 const app = express();
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+const fs = require('fs')
+const  cors = require('cors')
 const swaggerDocument = YAML.load(path.resolve(__dirname,'api-spec.yaml'));
 global.__configurations = require(path.resolve(__dirname,'config.js'));
-global.ROUTE_DIR = __dirname + "/routes/api";
+global.ROUTE_DIR = __dirname + "/routes";
 global.CONTROLLER_DIR = __dirname + "/controllers";
 global.UTIL_DIR = __dirname + "/utils";
 global.DB_MODEL = __dirname + "/models";
 app.use(express.json())
+app.use(cors())
 app.use((req, res, next) => {
   if (req.originalUrl == "/") {
     res.status(200).send();
@@ -44,12 +47,23 @@ app.get("/health-check", async (req, res) => {
   await dbconnect();
   res.status(200).json({ message: "server is up" });
 });
-if (__configurations.ENVIRONMENT=='local'){
-  app.listen(3000,()=>{
 
-    console.log('app started on port 3000 in local environment')
+fs.readdirSync(ROUTE_DIR).forEach((file) => {
+
+  const routeName = `/api/${file.substring(0, file.length - 3)}`;
+  const router = require(`${ROUTE_DIR}/${file}`);
+
+  console.debug(`Loading router ${ROUTE_DIR}/${file} for route ${routeName}`);
+  app.use(routeName, router);
+});
+
+if (__configurations.ENVIRONMENT=='local'){
+  app.listen(3001,()=>{
+
+    console.log('app started on port 3001 in local environment')
   })
 }
+
 
 
 module.exports= app

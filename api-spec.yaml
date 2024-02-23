@@ -1,15 +1,17 @@
 openapi: 3.0.0
 info: 
-  title: sample API
-  description: these is the description of the api 
+  title: Sample API
+  description: This is the description of the API 
   version: "1"
 
 servers:
-  - url: http://localhost:3000
-    description: local development
+  - url: http://localhost:3001
+    description: Local development
 
 tags:
   - name: common
+  - name: user
+
 paths:
   /health-check:
     get:
@@ -17,7 +19,63 @@ paths:
         - common
       responses:
         200:
-          description: everything is good
+          description: Everything is good
         500:
-          description: something bad happen
-          
+          description: Something bad happened
+
+  /api/user/signup:
+    post:
+      tags:
+        - user
+      summary: User Signup
+      requestBody:
+        description: User signup request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: User created successfully
+        500:
+          description: Internal Server Error
+
+  /api/user/login:
+    post:
+      tags:
+        - user
+      summary: User Login
+      requestBody:
+        description: User login request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        401:
+          description: Invalid credentials
+        500:
+          description: Internal Server Error
