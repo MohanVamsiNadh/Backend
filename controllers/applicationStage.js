@@ -71,7 +71,7 @@ module.exports = {
   search: async (req, res) => {
     await dbconnect();
     try {
-      let resources = await ApplicationStage.find();
+      let resources = await ApplicationStage.find().populate('applicationType').populate('roleId');
       res.status(200).json({ count: resources.length, data: resources });
     } catch (err) {
       console.log(`Error while searching application stage`);

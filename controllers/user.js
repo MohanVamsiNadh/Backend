@@ -17,12 +17,17 @@ module.exports = {
         return res.status(400).json({ message: 'User already exists' });
       }
 
-      const role = await Role.findById(roleId);
+
+      const defaultRole = 'user';
+
+      let role = await Role.findOne({ name: defaultRole });
 
       if (!role) {
-        return res.status(404).json({ message: 'Role not found' });
+        role = new Role({ name: defaultRole });
+        await role.save();
       }
 
+      
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
