@@ -3,9 +3,9 @@ const AWS = require('aws-sdk');
 module.exports = {
   upload: async (req, res) => {
     const s3 = new AWS.S3({
-      accessKeyId: process.env.ACCESS_KEY,
-      secretAccessKey: process.env.SECRET_KEY,
-      region: process.env.REGION,
+      accessKeyId:__configurations.accessKeyId,
+      secretAccessKey: __configurations.secretAccessKey,
+      region:__configurations.region,
     });
 
     try {
