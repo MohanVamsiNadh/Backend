@@ -17,12 +17,15 @@ const userSchema = new Schema({
       type: String,
       required: true,
     },
-    roles: [
+    role: 
       {
         type: Schema.Types.ObjectId,
         ref: 'Role',
       },
-    ],
+      phoneNumber:{
+        type: String
+      }
+    
   });
 
 
