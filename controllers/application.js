@@ -123,7 +123,7 @@ module.exports = {
 
       let allApplications = await UserApplication.find({}).populate('currentStage').populate('userId').populate('application_typeId')
 
-      let filteredApplications= allApplications.filter((application) => application.currentStage.roleId == req.query.roleId && application.status !=  'reject')
+      let filteredApplications= allApplications.filter((application) => application.currentStage.roleId == req.query.roleId && application.status !=  'rejected' && application.status != 'approved')
       return res.status(200).json({data : filteredApplications})
     }
 
