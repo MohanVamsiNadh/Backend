@@ -12,6 +12,7 @@ servers:
 tags:
   - name: common
   - name: user
+  - name: upload
 
 paths:
   /health-check:
@@ -80,3 +81,53 @@ paths:
           description: Invalid credentials
         500:
           description: Internal Server Error
+  /api/upload:
+
+    post:
+      tags:
+        - upload
+      summary: Upload a file to Amazon S3
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Confirmation message
+                  location:
+                    type: string
+                    description: URL of the uploaded file on S3
+        '400':
+          description: Bad Request - No file uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
