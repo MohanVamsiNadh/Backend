@@ -13,6 +13,7 @@ tags:
   - name: common
   - name: user
   - name: upload
+  - name: applicationType
 
 paths:
   /health-check:
@@ -27,51 +28,39 @@ paths:
 
   /api/user/signup:
     post:
+      summary: Signup a new user
       tags:
         - user
-      summary: User Signup
       requestBody:
-        description: User signup request
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                phoneNumber:
-                  type: string
+              $ref: '#/components/schemas/UserSignup'
       responses:
-        201:
-          description: User created successfully
-        500:
+        '201':
+          description: Created
+        '400':
+          description: User already exists or invalid data
+        '404':
+          description: Role not found
+        '500':
           description: Internal Server Error
 
   /api/user/login:
     post:
+      summary: Login and generate JWT token
       tags:
         - user
-      summary: User Login
       requestBody:
-        description: User login request
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
+              $ref: '#/components/schemas/UserLogin'
       responses:
-        200:
-          description: Login successful
+        '200':
+          description: Successful login
           content:
             application/json:
               schema:
@@ -79,9 +68,109 @@ paths:
                 properties:
                   token:
                     type: string
-        401:
+        '401':
           description: Invalid credentials
-        500:
+        '500':
+          description: Internal Server Error
+
+  /api/user:
+    post:
+      summary: Create a new user
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: User already exists or invalid data
+        '404':
+          description: Role not found
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all users
+      tags:
+        - user
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /api/user/{id}:
+    get:
+      summary: Get a user by ID
+      tags:
+        - user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a user by ID
+      tags:
+        - user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a user by ID
+      tags:
+        - user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: User not found
+        '500':
           description: Internal Server Error
   /api/upload:
 
@@ -133,3 +222,538 @@ paths:
                   error:
                     type: string
                     description: Error message
+
+  /api/applicationType:
+    post:
+      tags:
+        - applicationType
+      summary: Create a new application type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationType'
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Invalid data
+        '500':
+          description: Internal Server Error
+
+    get:
+      tags:
+        - applicationType
+      summary: Get all application types
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationType'
+        '500':
+          description: Internal Server Error
+
+  /api/applicationType/{id}:
+    get:
+      tags:
+        - applicationType
+      summary: Get an application type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationType'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      tags:
+        - applicationType
+      summary: Update an application type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationType'
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - applicationType
+      summary: Delete an application type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+  /api/applicationstage:
+    post:
+      summary: Create a new application stage
+      tags:
+        - applicationstage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationStage'
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Invalid data
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all application stages
+      tags:
+        - applicationstage
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationStage'
+        '500':
+          description: Internal Server Error
+
+  /api/applicationstage/{id}:
+    get:
+      summary: Get an application stage by ID
+      tags:
+        - applicationstage
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationStage'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update an application stage by ID
+      tags:
+        - applicationstage
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationStage'
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete an application stage by ID
+      tags:
+        - applicationstage
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /api/applications:
+    post:
+      summary: Create a new user application
+      tags:
+        - applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserApplication'
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Invalid data
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all user applications
+      tags:
+        - applications
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserApplication'
+        '500':
+          description: Internal Server Error
+
+  /api/applications/{id}:
+    get:
+      summary: Get a user application by ID
+      tags:
+        - applications
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserApplication'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a user application by ID
+      tags:
+        - applications
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserApplication'
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a user application by ID
+      tags:
+        - applications
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /api/role:
+    post:
+      summary: Create a new role
+      tags:
+        - role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Invalid data
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all roles
+      tags:
+        - role
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+        '500':
+          description: Internal Server Error
+
+  /api/role/{id}:
+    get:
+      summary: Get a role by ID
+      tags:
+        - role
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a role by ID
+      tags:
+        - role
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a role by ID
+      tags:
+        - role
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    ApplicationType:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          
+    ApplicationStage:
+      type: object
+      properties:
+        applicationType:
+          type: string
+          description: Application type ID
+        stageName:
+          type: string
+          description: Name of the application stage
+        order:
+          type: integer
+          description: Order of the application stage
+        roleId:
+          type: string
+          description: Role ID required for the application stage
+          
+    UserApplication:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: User ID
+        document:
+          type: string
+          description: Document details
+        application_typeId:
+          type: string
+          description: Application type ID
+        currentStage:
+          type: string
+          description: Current stage of the application
+        status:
+          type: string
+          description: Application status
+    Role:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the role
+    UserSignup:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          description: Email of the user
+        password:
+          type: string
+          description: Password of the user
+        phoneNumber:
+          type: string
+          description: Phone number of the user
+        roleId:
+          type: string
+          description: ID of the role for the user
+
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email of the user
+        password:
+          type: string
+          description: Password of the user
+
+    UserCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          description: Email of the user
+        password:
+          type: string
+          description: Password of the user
+        phoneNumber:
+          type: string
+          description: Phone number of the user
+        roleId:
+          type: string
+          description: ID of the role for the user
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Updated name of the user
+        email:
+          type: string
+          description: Updated email of the user
+        password:
+          type: string
+          description: Updated password of the user
+        phoneNumber:
+          type: string
+          description: Updated phone number of the user
+        roleId:
+          type: string
+          description: Updated ID of the role for the user
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID of the user
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          description: Email of the user
+        password:
+          type: string
+          description: Password of the user
+        phoneNumber:
+          type: string
+          description: Phone number of the user
+        role:
+          $ref: '#/components/schemas/Role'
