@@ -13,19 +13,18 @@ module.exports = {
 
         try {
             await dbconnect()
-            const { name, email, password } = req.body;
+            const { name, email, password ,phoneNumber} = req.body;
         
 
-            // check whether user exist or not
             const Existuser = await UserModal.findOne({ email });
         
             if (Existuser) {
               return res.status(400).json({ message:'user already exist' });
             }
-            // Assign default role 'user'
+      
             const defaultRole = 'user';
         
-            // Check if the default role exists, if not, create it
+          
             let role = await RoleModal.findOne({ name: defaultRole });
         
             if (!role) {
@@ -41,7 +40,8 @@ module.exports = {
               name,
               email,
               password: hashedPassword,
-              roles: [role._id],
+              phoneNumber:phoneNumber,
+              role: role._id,
             });
         
             await user.save();
@@ -70,7 +70,7 @@ module.exports = {
             }
         
             // Generate JWT token with user ID and role, set to expire in 7 days
-            const token = jwt.sign({ userId: user._id, role: user.roles }, __configurations.SECRETKEY, { expiresIn: '7d' });
+            const token = jwt.sign({ userId: user._id, role: user.role }, __configurations.SECRETKEY, { expiresIn: '7d' });
         
             res.status(200).json({  token });
           } catch (error) {
